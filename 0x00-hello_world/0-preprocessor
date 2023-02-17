@@ -1,7 +1,2 @@
 #!/bin/bash
-
-# Set the name of the C file in the $CFILE environment variable
-CFILE="your_c_file.c"
-
-# Run the C file through the preprocessor and save the output to a file named "c"
-gcc -E "$CFILE" -o c
+CFILE="your_c_file.c" | gc -E "$CFILE" -o c
