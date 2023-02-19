@@ -1,12 +1,10 @@
 #include <stdio.h>
-/*
-* program that prints
-* exactly"Programming is 
-* like building a multilingual
-* puzzle,followed by a new line 
+/**
+* main - A program that prints a line using puts command
+* Return: 0 (Success)
 */
 int main(void)
 {
 puts("\"Programming is like building a multilingual puzzle\n");
-return(0);
+return (0);
 }
