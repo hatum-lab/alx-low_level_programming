@@ -1,2 +1,2 @@
 #!/bin/bash
-puts $ echo 'Programming is like building a multilingual puzzle'
+gcc -c | puts $ echo 'Programming is like building a multilingual puzzle'
