@@ -1,9 +1,9 @@
 #include<stdio.h>
 /**
-* man - A program that prints the size of various types on the computer
+* main - A program that prints the size of various types on the computer
 * Return: 0 always (Success)
 */
-int man(void)
+int main(void)
 {
 printf("Size of char: %zu byte(s)\n", sizeof(char));
 printf("Size of short: %zu byte(s)\n", sizeof(short));
