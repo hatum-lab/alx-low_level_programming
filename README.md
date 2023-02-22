@@ -1,1 +1,1 @@
-get started with C language
+solvig code errors
