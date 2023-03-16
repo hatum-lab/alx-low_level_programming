@@ -1,58 +1,106 @@
+#include "holberton.h"
 #include <stdio.h>
 #include <stdlib.h>
+/**
+ * Error - prints Error str.
+ *
+ * Return: Error and new line.
+ */
+void Error(void)
+{
+	_putchar('E');
+	_putchar('r');
+	_putchar('r');
+	_putchar('o');
+	_putchar('r');
+	_putchar('\n');
+	exit(98);
+}
+/**
+ * allDigits - checks if all the characters are digits.
+ * @arg: the arguments of program.
+ * Return: 1 all digits 0 otherwise.
+ */
+int allDigits(char **arg)
+{
+	int i, j;
 
-int main(int argc, char **argv) {
-    if (argc != 3) {
-        printf("Error\n");
-        return 98;
-    }
+	for (i = 1; i <= 2; i++)
+		for (j = 0; arg[i][j]; j++)
+		{
+			if (arg[i][j] < '0' || arg[i][j] > '9')
+				return (0);
+		}
+	return (1);
+}
+/**
+ * _calloc- initializes memory spaces with zero.
+ * @nmemb: string 1.
+ * @size: string 2, concatenated to 1
+ *
+ * Return: pointer to the concatenated string.
+ */
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	unsigned int i;
+	char *newArray;
 
-    char *num1 = argv[1];
-    char *num2 = argv[2];
-    int len1 = 0, len2 = 0;
+	if (nmemb == 0 || size == 0)
+		return (NULL);
 
-    // Check if both numbers are composed of digits only
-    for (int i = 0; num1[i] != '\0'; i++) {
-        if (num1[i] < '0' || num1[i] > '9') {
-            printf("Error\n");
-            return 98;
-        }
-        len1++;
-    }
+	newArray = malloc(nmemb * size);
+	if (newArray == NULL)
+		return (NULL);
 
-    for (int i = 0; num2[i] != '\0'; i++) {
-        if (num2[i] < '0' || num2[i] > '9') {
-            printf("Error\n");
-            return 98;
-        }
-        len2++;
-    }
+	for (i = 0; i < (nmemb * size); i++)
+		*(newArray + i) = 0;
 
-    int *result = calloc(len1 + len2, sizeof(int));
+	return (newArray);
+}
+/**
+ * main- multiplies 2 positive numbers.
+ * @argc: counter of arguments.
+ * @argv: vector of arguments
+ * Return: ans or Error.
+ */
 
-    // Multiply the two numbers
-    for (int i = len1 - 1; i >= 0; i--) {
-        for (int j = len2 - 1; j >= 0; j--) {
-            int res = (num1[i] - '0') * (num2[j] - '0');
-            int p1 = i + j, p2 = i + j + 1;
-            int sum = res + result[p2];
-            result[p2] = sum % 10;
-            result[p1] += sum / 10;
-        }
-    }
+int main(int argc, char **argv)
+{
+	int i, j, carry, len, len_s1 = 0, len_s2 = 0;
+	char *s1 = *(argv + 1), *s2 = *(argv + 2);
+	int *a, *b, *ans;
 
-    // Remove leading zeros from result
-    int i = 0;
-    while (result[i] == 0 && i < len1 + len2 - 1) {
-        i++;
-    }
-
-    // Print the result
-    for (; i < len1 + len2; i++) {
-        printf("%d", result[i]);
-    }
-    printf("\n");
-
-    free(result);
-    return 0;
+	if (argc != 3 || allDigits(argv) != 1)
+		Error();
+	if (*s1 == '0' || *s2 == '0')
+		_putchar('0');
+	while (*(*(argv + 1) + len_s1))
+		len_s1++;
+	while (*(*(argv + 2) + len_s2))
+		len_s2++;
+	len = len_s1 + len_s2 + 1;
+	a = (int *) malloc(len_s1 * sizeof(int));
+	b = (int *) malloc(len_s2 * sizeof(int));
+	ans = _calloc(len, sizeof(int));
+	if (a == NULL || b == NULL || ans == NULL)
+		Error();
+	for (i = len_s1 - 1, j = 0; i >= 0; i--, j++)
+		*(a + j) = *(s1 + i) - '0';
+	for (i = len_s2 - 1, j = 0; i >= 0; i--, j++)
+		*(b + j) = *(s2 + i) - '0';
+	for (i = 0; i < len_s2; i++)
+		for (j = 0; j < len_s1; j++)
+			*(ans + i + j) = *(ans + i + j) + *(b + i) * *(a + j);
+	for (i = 0; i < len_s1 + len_s2; i++)
+	{
+		carry = *(ans + i) / 10, *(ans + i) = *(ans + i) % 10;
+		*(ans + i + 1) = *(ans + i + 1) + carry; }
+	for (i = len_s1 + len_s2; i >= 0; i--)
+		if (*(ans + i) > 0)
+			break;
+	for (; i >= 0; i--)
+		_putchar(*(ans + i) + '0');
+	_putchar('\n');
+	free(a), free(b), free(ans);
+	return (0);
 }
