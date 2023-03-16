@@ -1,42 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <string.h>
 
-/**
- * main - multiplies two positive numbers
- * @argc: number of arguments
- * @argv: arguments
- * Return: int
-**/
-
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-	unsigned long mul;
-	int i, j;
+    int i, j, k, carry, len1, len2, res_len;
+    char *num1, *num2, *result;
 
-	if (argc != 3)
-	{
-		printf("Error\n");
-		exit(98);
-	}
+    if (argc != 3) {
+        printf("Error\n");
+        return 98;
+    }
 
-	for (i = 1; i < argc; i++)
-	{
-		for (j = 0; argv[i][j] != '\0'; j++)
-		{
-			if (argv[i][j] > '9' || argv[i][j] < '0')
-			{
-				printf("Error\n");
-				exit(98);
-			}
-		}
-	}
-	mul = strtoul(argv[1], NULL, 10) * strtoul(argv[2], NULL, 10);
-	if (mul > UINT_MAX)
-	{
-		printf("Error\n");
-		exit(98);
-	}
-	printf("%lu\n", mul);
-	return (0);
+    num1 = argv[1];
+    num2 = argv[2];
+
+    len1 = strlen(num1);
+    len2 = strlen(num2);
+    res_len = len1 + len2;
+
+    result = calloc(res_len, sizeof(char));
+
+    if (!result) {
+        printf("Error\n");
+        return 98;
+    }
+
+    for (i = len1 - 1; i >= 0; i--) {
+        carry = 0;
+        for (j = len2 - 1; j >= 0; j--) {
+            k = i + j + 1;
+            result[k] += (num1[i] - '0') * (num2[j] - '0') + carry;
+            carry = result[k] / 10;
+            result[k] %= 10;
+        }
+        result[i + j + 1] += carry;
+    }
+
+    i = 0;
+    while (i < res_len - 1 && result[i] == 0) {
+        i++;
+    }
+
+    for (; i < res_len; i++) {
+        putchar(result[i] + '0');
+    }
+
+    putchar('\n');
+
+    free(result);
+
+    return 0;
 }
