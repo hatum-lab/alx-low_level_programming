@@ -1,54 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-int main(int argc, char **argv)
-{
-    int i, j, k, carry, len1, len2, res_len;
-    char *num1, *num2, *result;
-
+int main(int argc, char **argv) {
     if (argc != 3) {
         printf("Error\n");
         return 98;
     }
 
-    num1 = argv[1];
-    num2 = argv[2];
+    char *num1 = argv[1];
+    char *num2 = argv[2];
+    int len1 = 0, len2 = 0;
 
-    len1 = strlen(num1);
-    len2 = strlen(num2);
-    res_len = len1 + len2;
-
-    result = calloc(res_len, sizeof(char));
-
-    if (!result) {
-        printf("Error\n");
-        return 98;
-    }
-
-    for (i = len1 - 1; i >= 0; i--) {
-        carry = 0;
-        for (j = len2 - 1; j >= 0; j--) {
-            k = i + j + 1;
-            result[k] += (num1[i] - '0') * (num2[j] - '0') + carry;
-            carry = result[k] / 10;
-            result[k] %= 10;
+    // Check if both numbers are composed of digits only
+    for (int i = 0; num1[i] != '\0'; i++) {
+        if (num1[i] < '0' || num1[i] > '9') {
+            printf("Error\n");
+            return 98;
         }
-        result[i + j + 1] += carry;
+        len1++;
     }
 
-    i = 0;
-    while (i < res_len - 1 && result[i] == 0) {
+    for (int i = 0; num2[i] != '\0'; i++) {
+        if (num2[i] < '0' || num2[i] > '9') {
+            printf("Error\n");
+            return 98;
+        }
+        len2++;
+    }
+
+    int *result = calloc(len1 + len2, sizeof(int));
+
+    // Multiply the two numbers
+    for (int i = len1 - 1; i >= 0; i--) {
+        for (int j = len2 - 1; j >= 0; j--) {
+            int res = (num1[i] - '0') * (num2[j] - '0');
+            int p1 = i + j, p2 = i + j + 1;
+            int sum = res + result[p2];
+            result[p2] = sum % 10;
+            result[p1] += sum / 10;
+        }
+    }
+
+    // Remove leading zeros from result
+    int i = 0;
+    while (result[i] == 0 && i < len1 + len2 - 1) {
         i++;
     }
 
-    for (; i < res_len; i++) {
-        putchar(result[i] + '0');
+    // Print the result
+    for (; i < len1 + len2; i++) {
+        printf("%d", result[i]);
     }
-
-    putchar('\n');
+    printf("\n");
 
     free(result);
-
     return 0;
 }
